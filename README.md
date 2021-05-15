@@ -1,0 +1,2 @@
+# UCASCourseSiteHelper
+基于tampermonkey编写的UCAS课程网站助手，可以聚合UCAS课程网站的资源和作业页面、资源页面自动按最近修改时间降序排列、自动切换到第二身份。
