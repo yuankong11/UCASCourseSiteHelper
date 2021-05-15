@@ -1,5 +1,6 @@
 // ==UserScript==
 // @name         UCASCourseCite
+// @namespace    Yuankong11
 // @version      0.1
 // @description  聚合UCAS课程网站的资源和作业页面；资源页面自动按最近修改时间降序排列；自动切换到第二身份；
 // @author       Yuankong11
