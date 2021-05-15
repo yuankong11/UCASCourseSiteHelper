@@ -6,6 +6,7 @@
 // @include      *://course.ucas.ac.cn/portal?sakai.session=*
 // @include      *://course.ucas.ac.cn/portal?anotherUser=*
 // @include      *://course.ucas.ac.cn/portal/site/*/tool/*
+// @updateURL    https://raw.githubusercontent.com/yuankong11/UCASCourseSiteHelper/main/UCASCourseCiteHelper.js
 // ==/UserScript==
 
 ;(function () {
