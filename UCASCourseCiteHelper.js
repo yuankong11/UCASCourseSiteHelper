@@ -1,13 +1,12 @@
 // ==UserScript==
-// @name         UCASCourseCite
+// @name         UCASCourseCiteHelper
 // @namespace    Yuankong11
-// @version      0.1
-// @description  聚合UCAS课程网站的资源和作业页面；资源页面自动按最近修改时间降序排列；自动切换到第二身份；
+// @version      0.12
+// @description  聚合UCAS课程网站的资源和作业页面；资源页面自动按最近修改时间降序排列；自动切换到第二身份。
 // @author       Yuankong11
 // @include      *://course.ucas.ac.cn/portal?sakai.session=*
 // @include      *://course.ucas.ac.cn/portal?anotherUser=*
 // @include      *://course.ucas.ac.cn/portal/site/*/tool/*
-// @updateURL    https://raw.githubusercontent.com/yuankong11/UCASCourseSiteHelper/main/UCASCourseCiteHelper.js
 // ==/UserScript==
 
 ;(function () {
@@ -123,7 +122,8 @@
             a {text-decoration: none;}\
             a:link, a:visited, a:hover, a:active {color: #a749ff;}\
           </style>\
-          <base target="_blank">'
+          <base target="_blank">\
+          <title>UCAS课程网站助手</title>'
         document.body.innerHTML = body
         document.head.innerHTML = head
       } else {
