@@ -5,7 +5,7 @@
 
 1. 安装chrome插件[tampermonkey](https://www.tampermonkey.net/)
 
-2. 安装本脚本
+2. 安装[本脚本](https://greasyfork.org/zh-CN/scripts/426519-ucascoursecitehelper)
 
 3. 进入课程网站
 
