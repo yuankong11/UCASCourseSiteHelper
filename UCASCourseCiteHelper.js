@@ -1,135 +1,15 @@
 // ==UserScript==
 // @name         UCASCourseCiteHelper
 // @namespace    Yuankong11
-// @version      0.12
+// @version      0.20
 // @description  聚合UCAS课程网站的资源和作业页面；资源页面自动按最近修改时间降序排列；自动切换到第二身份。
 // @author       Yuankong11
+// @require      https://cdn.bootcdn.net/ajax/libs/vue/2.6.12/vue.min.js
+// @require      https://unpkg.com/element-ui@2.14.1/lib/index.js
+// @require      https://cdn.bootcdn.net/ajax/libs/axios/0.21.0/axios.min.js
 // @include      *://course.ucas.ac.cn/portal?sakai.session=*
 // @include      *://course.ucas.ac.cn/portal?anotherUser=*
 // @include      *://course.ucas.ac.cn/portal/site/*/tool/*
 // ==/UserScript==
 
-;(function () {
-  'use strict'
-  if (document.baseURI.indexOf('site') != -1) {
-    let recently = document.querySelector('a[title="按最近修改日期排序"]')
-    if (recently != null) {
-      let clicked = document.querySelector(
-        'img[title="按最近修改日期降序排列"]'
-      )
-      if (clicked == null) {
-        recently.click()
-      }
-    }
-    return
-  }
-  if (document.baseURI.indexOf('anotherUser') == -1) {
-    let au = document.querySelector('a[href^="/portal?anotherUser="]')
-    if (au != null) {
-      au.click()
-      return
-    }
-  }
-  window.onload = function () {
-    let body = '<h1 align="center">课程网站</h1>'
-    let sites = document.querySelectorAll('.fav-sites-term')
-    let div1 =
-      '<div style="display:inline-block; width:40%; vertical-align:top">'
-    let div2 =
-      '<div style="display:inline-block; margin-left:30px; width:40%; vertical-align:top">'
-    let divs = new Array(sites.length - 1)
-    let divs_done = 0
-    for (let i = 0; i < sites.length - 1; i++) {
-      let site = sites[i]
-      let name = site.querySelector('.favorites-term-header').innerHTML
-      divs[i] = '<h2>' + name + '</h2>'
-      let table =
-        '<table border="1">\
-          <tr>\
-            <th>课程</th>\
-            <th>资源</th>\
-            <th>作业</th>\
-          </tr>'
-      let entries = site.querySelectorAll('.fav-sites-entry  ')
-      let trs = new Array(entries.length)
-      let trs_done = 0
-      for (let j = 0; j < entries.length; j++) {
-        let entry = entries[j]
-        trs[j] = '<tr>'
-        let a = entry.querySelectorAll('a')
-        let course = a[1]
-        let ref = course.getAttribute('href')
-        let title = course.getAttribute('title')
-        trs[j] += '<td><a href="' + ref + '">' + title + '</a></td>'
-        let collapse_id = a[2].getAttribute('id')
-        let json_url = '/direct/site/' + collapse_id + '/pages.json'
-        $.getJSON(json_url, function (ret) {
-          let resource = ret[3].id
-          let homeword = ret[5].id
-          trs[j] +=
-            '<td><a href="https://course.ucas.ac.cn/portal/site/' +
-            collapse_id +
-            '/page/' +
-            resource +
-            '">资源</a></td>' +
-            '<td><a href="https://course.ucas.ac.cn/portal/site/' +
-            collapse_id +
-            '/page/' +
-            homeword +
-            '">作业</a></td>'
-          trs[j] += '</tr>'
-          trs_done++
-        })
-      }
-      let trs_completed = function () {
-        if (trs_done == trs.length) {
-          trs.forEach((tr) => {
-            table += tr
-          })
-          table += '</table>'
-          divs[i] += table
-          divs_done++
-        } else {
-          setTimeout(trs_completed, 10)
-        }
-      }
-      setTimeout(trs_completed, 10)
-    }
-    let divs_completed = function () {
-      if (divs_done == divs.length) {
-        let left = true
-        divs.forEach((div) => {
-          if (left) {
-            div1 += div
-          } else {
-            div2 += div
-          }
-          left = !left
-        })
-        div1 += '</div>'
-        div2 += '</div>'
-        body += '<div align="center">' + div1 + div2 + '</div>'
-        let head =
-          '<style>\
-            table {border-collapse: collapse; width: 100%;}\
-            th, td {text-align: left; padding: 8px; font-size: 130%; font-family: arial;}\
-            tr:nth-child(even) {background-color: #efffef;}\
-            tr:nth-child(odd) {background-color: #e1ffeb;}\
-            th {background-color: #bef5ff; color: black;}\
-            h1 {font-size: 250%; font-family: arial; color: #50bfff;}\
-            h2 {font-size: 160%; font-family: arial; color: #b47bff;}\
-            body {background: #f1f1f1;}\
-            a {text-decoration: none;}\
-            a:link, a:visited, a:hover, a:active {color: #a749ff;}\
-          </style>\
-          <base target="_blank">\
-          <title>UCAS课程网站助手</title>'
-        document.body.innerHTML = body
-        document.head.innerHTML = head
-      } else {
-        setTimeout(divs_completed, 50)
-      }
-    }
-    setTimeout(divs_completed, 50)
-  }
-})()
+!function(e){var t={};function r(n){if(t[n])return t[n].exports;var o=t[n]={i:n,l:!1,exports:{}};return e[n].call(o.exports,o,o.exports,r),o.l=!0,o.exports}r.m=e,r.c=t,r.d=function(e,t,n){r.o(e,t)||Object.defineProperty(e,t,{enumerable:!0,get:n})},r.r=function(e){"undefined"!=typeof Symbol&&Symbol.toStringTag&&Object.defineProperty(e,Symbol.toStringTag,{value:"Module"}),Object.defineProperty(e,"__esModule",{value:!0})},r.t=function(e,t){if(1&t&&(e=r(e)),8&t)return e;if(4&t&&"object"==typeof e&&e&&e.__esModule)return e;var n=Object.create(null);if(r.r(n),Object.defineProperty(n,"default",{enumerable:!0,value:e}),2&t&&"string"!=typeof e)for(var o in e)r.d(n,o,function(t){return e[t]}.bind(null,o));return n},r.n=function(e){var t=e&&e.__esModule?function(){return e.default}:function(){return e};return r.d(t,"a",t),t},r.o=function(e,t){return Object.prototype.hasOwnProperty.call(e,t)},r.p="",r(r.s=1)}([function(e,t){e.exports=Vue},function(e,t,r){"use strict";r.r(t);var n=r(0),o=r.n(n),l=function(){var e=this.$createElement,t=this._self._c||e;return t("div",{staticClass:"vue_app",attrs:{align:"center"}},[t("el-col",{attrs:{span:16,offset:4}},[t("el-card",[t("div",{attrs:{slot:"header"},slot:"header"},[t("span",{staticStyle:{"font-size":"20px"}},[this._v("UCAS课程网站助手")])]),this._v(" "),t("div",[t("Table")],1)])],1)],1)};l._withStripped=!0;var a=function(){var e=this,t=e.$createElement,r=e._self._c||t;return r("el-table",{staticStyle:{width:"100%","margin-bottom":"20px","font-size":"16px"},attrs:{data:e.tableData,"row-key":"name",border:"",stripe:"","default-expand-all":"","tree-props":{children:"children"}}},[r("el-table-column",{attrs:{prop:"name",label:"课程"},scopedSlots:e._u([{key:"default",fn:function(t){return[r("a",{attrs:{href:t.row.href}},[e._v(" "+e._s(t.row.name))])]}}])}),e._v(" "),r("el-table-column",{attrs:{prop:"resource",label:"资源",width:"180"},scopedSlots:e._u([{key:"default",fn:function(t){return[null!=t.row.resource?r("a",{attrs:{href:t.row.resource}},[e._v("资源")]):e._e()]}}])}),e._v(" "),r("el-table-column",{attrs:{prop:"homework",label:"作业",width:"180"},scopedSlots:e._u([{key:"default",fn:function(t){return[null!=t.row.homework?r("a",{attrs:{href:t.row.homework}},[e._v("作业")]):e._e()]}}])})],1)};function i(e,t,r,n,o,l,a,i){var s,u="function"==typeof e?e.options:e;if(t&&(u.render=t,u.staticRenderFns=r,u._compiled=!0),n&&(u.functional=!0),l&&(u._scopeId="data-v-"+l),a?(s=function(e){(e=e||this.$vnode&&this.$vnode.ssrContext||this.parent&&this.parent.$vnode&&this.parent.$vnode.ssrContext)||"undefined"==typeof __VUE_SSR_CONTEXT__||(e=__VUE_SSR_CONTEXT__),o&&o.call(this,e),e&&e._registeredComponents&&e._registeredComponents.add(a)},u._ssrRegister=s):o&&(s=i?function(){o.call(this,(u.functional?this.parent:this).$root.$options.shadowRoot)}:o),s)if(u.functional){u._injectStyles=s;var c=u.render;u.render=function(e,t){return s.call(t),c(e,t)}}else{var d=u.beforeCreate;u.beforeCreate=d?[].concat(d,s):[s]}return{exports:e,options:u}}a._withStripped=!0;var s=i({name:"Table",data:()=>({tableData:[]}),mounted:function(){this.buildTable()},methods:{testTable(){this.tableData=[{name:"t1",children:[{name:"n1",href:"#",resource:"r1",homework:"h1"}]}]},buildTable(){let e=document.querySelectorAll(".fav-sites-term");this.tableData=[];for(let t=0;t<e.length-1;t++){let r=e[t];this.tableData.push({name:r.querySelector(".favorites-term-header").innerHTML,children:[]});let n=r.querySelectorAll(".fav-sites-entry  ");for(let e=0;e<n.length;e++){let r=n[e].querySelectorAll("a"),o=r[1],l=o.getAttribute("href"),a=o.getAttribute("title");this.tableData[t].children.push({name:a,href:l,resource:"",homework:""});let i=r[2].getAttribute("id"),s="/direct/site/"+i+"/pages.json";axios.get(s).then(r=>{let n=r.data,o=this.tableData[t].children[e];o.resource="https://course.ucas.ac.cn/portal/site/"+i+"/page/"+n[3].id,o.homework="https://course.ucas.ac.cn/portal/site/"+i+"/page/"+n[5].id})}}}}},a,[],!1,null,null,null);s.options.__file="src/Table.vue";var u=i({name:"app",components:{Table:s.exports}},l,[],!1,null,null,null);u.options.__file="src/app.vue";var c=u.exports;if(-1!=document.baseURI.indexOf("site")){let e=document.querySelector('a[title="按最近修改日期排序"]');if(null!=e){null==document.querySelector('img[title="按最近修改日期降序排列"]')&&e.click()}}else if(-1==document.baseURI.indexOf("anotherUser")){let e=document.querySelector('a[href^="/portal?anotherUser="]');null!=e&&e.click()}else{(e=>{const t=document.getElementsByTagName("head")[0],r=document.createElement("link");r.rel="stylesheet",r.type="text/css",r.href=e,r.media="all",t.appendChild(r)})("https://unpkg.com/element-ui@2.14.1/lib/theme-chalk/index.css"),document.body.innerHTML='<div hidden="true">'+document.body.innerHTML+"</div>";let e=document.createElement("div");e.id="vue_app",document.body.appendChild(e),document.head.innerHTML+='<base target="_blank">',new o.a({el:"#vue_app",render:e=>e(c)})}}]);
